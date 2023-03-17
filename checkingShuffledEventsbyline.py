@@ -24,7 +24,7 @@ from tensorflow.python.keras.wrappers.scikit_learn import KerasRegressor
 #--------- File with events for reconstruction:
 #--- evts for training:
 #infile = "tankPMT_forVetrexReco.csv"
-infile = "/home/evi/Desktop/ANNIE-THESIS/tankPMT_forVetrexReco_withRecoQ.csv"
+infile = "/home/evi/Desktop/ANNIE-THESIS/shuffled.csv"
 
 
 # Set TF random seed to improve reproducibility
@@ -44,12 +44,9 @@ print("recovertex: ", recovertex[0])
 print("labels: ", labels)
 print("gridpoint ", gridpoint)
 print("gridpoint pmt", gridpointpmt)
-np.random.shuffle(Dataset) #shuffling the data sample to avoid any bias in the training
-df = pd.DataFrame(Dataset)
-print(df.head())
-df.to_csv("shuffledtankPMT_forVetrexReco_withRecoQ.csv", float_format = '%.3f')
-
-# print('new grid', df[['5508']].head(10), 't', df[['T_1']].head(10))
+# np.random.shuffle(Dataset) #shuffling the data sample to avoid any bias in the training
+# df = pd.DataFrame(Dataset)
+# print(df.head())
 
 
 
