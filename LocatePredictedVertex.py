@@ -10,20 +10,10 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from array import array
-from sklearn import datasets
-from sklearn import metrics
-from sklearn import model_selection
-from sklearn import preprocessing
-from sklearn.utils import shuffle
-from tensorflow import keras
-from tensorflow.python.keras.models import Sequential
-from tensorflow.python.keras.layers import Dense
-from tensorflow.python.keras.callbacks import ModelCheckpoint
-from tensorflow.python.keras.wrappers.scikit_learn import KerasRegressor
 
-# infile= 'middleMerged.csv'
-infile = "predictionsVertexDRfor10cm.csv"
-# df = pd.read_csv('middleMerged.csv')
+infile= 'middleMerged.csv'
+# infile = "predictionsVertexDRfor10cm1304a.csv"
+df = pd.read_csv('middleMerged1304a.csv')
 # filein = open(str(infile))
 # print("evts for training in: ",filein)
 
@@ -51,9 +41,6 @@ def find_tank(truevtxx_tank, truevtxy_tank, truevtxz_tank, step, Gridpoint):
     return vtx_x, vtx_y, vtx_z
 
 
-# read CSV file into DataFrame
-df = pd.read_csv("predictionsVertexDRfor10cm.csv")
-
 # check the length of the DataFrame
 print(df.shape)
 
@@ -65,13 +52,13 @@ print(len(new_columns))
 print(len(new_columns[0]))
 
 # create new columns for vtx_x, vtx_y, and vtx_z
-df[['vtx_x', 'vtx_y', 'vtx_z']] = new_columns
+# df[['vtx_x', 'vtx_y', 'vtx_z']] = new_columns
+df[['vtx_x', 'vtx_y', 'vtx_z']] = pd.DataFrame(new_columns.tolist(), index=df.index)
+
 
 # check the length of the DataFrame again
 print(df.shape)
 
 print(df.head())
-
-
 
 
