@@ -18,6 +18,7 @@ print(df.head())
 hitX,hitY,hitZ,hitT, labels, recovertex, DR_reco, DR, nhits0=np.split(df, [1100,2200,3300,4400,4403,4406,4407,4408], axis=1)
 
 dr = np.empty(np.shape(hitX))
+dr2 = np.empty(np.shape(hitX))
 
 hitX = np.array(hitX)
 hitZ = np.array(hitZ)
@@ -32,6 +33,12 @@ for i in range(0, 5):
         print(dr[i][j], ' ')
     print('\n')
 
+# Calculate Euclidean distance between truevtxX and truevtxZ
+truedr = np.linalg.norm(df[["trueX", "trueZ"]].values, axis=1)
+df["truedr"] = truedr
+
+print(df.head())
+
 print('dr shape', dr.shape)
 print('hity shape', hitY.shape)
 dr_df = pd.DataFrame(dr, columns=[f"dr_{i+1}" for i in range(1100)])
@@ -39,17 +46,3 @@ dff = pd.concat([df, dr_df], axis=1)
 
 dff.to_csv("predictionsVertex_3vars_with_dr.csv", index=False)
 print(dff.head())
-
-
-#Make Scatter Plot
-n_lines = 5
-plot_df = dff.iloc[:n_lines, :]
-for i in range(5):
-    label = f"Line {i+1}"
-    plt.scatter(plot_df[f"dr_{i+1}"], plot_df[f"hitY_{i+1}"], label=label)
-    
-plt.xlabel("hitX-Z")
-plt.ylabel("hitY")
-plt.legend()
-plt.title("Scatter plot of hitY / hitX-Z")
-plt.show()
