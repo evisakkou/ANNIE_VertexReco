@@ -45,7 +45,7 @@ def find_tank(truevtxx_tank, truevtxy_tank, truevtxz_tank, step, Gridpoint):
 print(df.shape)
 
 # apply find_tank function to each row
-new_columns = df['Gridpoint'].apply(lambda gp: find_tank(0, 0, 0, 10, gp))
+new_columns = df['Predicted_Gridpoint'].apply(lambda gp: find_tank(0, 0, 0, 10, gp))
 
 # check the length of the new columns
 print(len(new_columns))
