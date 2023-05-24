@@ -84,9 +84,11 @@ def hits_medianT(dt,dx,dy,dz):
     # Create new DataFrame with 20 columns each for X, Y, Z, and T
     new_df = pd.DataFrame()
     for col in ['X', 'Y', 'Z', 'T']:
-        for i in range(20):
+        for i in range(len(hitx)):
             new_col = f'{col}_{i+1}'
             new_df[new_col] = df_ToUse[col]
+
+
 
     # Copy the rest of the columns from the original DataFrame
     for col in d00.columns:
@@ -94,17 +96,28 @@ def hits_medianT(dt,dx,dy,dz):
             new_df[col] = d00[col]
     print('newdf', new_df)
     return new_df
+ 
+
 
 
 print("hitT[i][:].shape: ",hitT[0][:].shape)
-Dt = pd.DataFrame(hitT[0][:], columns = ['T'])
-Dx = pd.DataFrame(hitx[0][:], columns = ['X'])
-Dy = pd.DataFrame(hity[0][:], columns = ['Y'])
-Dz = pd.DataFrame(hitz[0][:], columns = ['Z'])
-print(hits_medianT(Dt, Dx, Dy, Dz))
+# Dt = pd.DataFrame(hitT[0][:], columns = ['T'])
+# Dx = pd.DataFrame(hitx[0][:], columns = ['X'])
+# Dy = pd.DataFrame(hity[0][:], columns = ['Y'])
+# Dz = pd.DataFrame(hitz[0][:], columns = ['Z'])
+
+
+
+new_df_x = pd.DataFrame(hitx[:, :20], columns=[f'X_{i+1}' for i in range(20)])
+new_df_y = pd.DataFrame(hity[:, :20], columns=[f'Y_{i+1}' for i in range(20)])
+new_df_z = pd.DataFrame(hitz[:, :20], columns=[f'Z_{i+1}' for i in range(20)])
+new_df_t = pd.DataFrame(hitT[:, :20], columns=[f'T_{i+1}' for i in range(20)])
+
+
+# print(hits_medianT(Dt, Dx, Dy, Dz))
 
 # Create the modified DataFrame
-modified_df = hits_medianT(Dt, Dx, Dy, Dz)
+# modified_df = hits_medianT(Dt, Dx, Dy, Dz)
 
 output_df = pd.DataFrame({'totalPMTs': totalPMTs[:,0],
                           'totalLAPPDs': totalLAPPDs[:,0],
@@ -120,8 +133,9 @@ output_df = pd.DataFrame({'totalPMTs': totalPMTs[:,0],
 })
 
 # print(output_df)
+final_df = pd.concat([new_df_x, new_df_y, new_df_z, new_df_t, output_df], axis=1)
 
-final_df = pd.concat([modified_df, output_df], axis=1)
+# final_df = pd.concat([modified_df, output_df], axis=1)
 print(final_df)
 
 # Save the modified DataFrame to a new CSV file
