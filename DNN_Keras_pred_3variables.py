@@ -30,7 +30,10 @@ from sklearn.preprocessing import MinMaxScaler
 #infile = "tankPMT_forVetrexReco_withRecoV.csv"
 # infile = "shuffledtankPMT_forVetrexReco_withRecoV.csv"
 # infile = "dataBootcampShuffle.csv"
-infile = "/home/evi/Desktop/ANNIE-THESIS/10cmRecoGridpoint_shuffled.csv"
+# infile = "/home/evi/Desktop/ANNIE-THESIS/10cmRecoGridpoint_shuffled.csv"
+# infile= '/home/evi/Desktop/ANNIE-THESIS/300hits_shuffled.csv'
+infile='shuffledevents_Timebeforemedian.csv'
+
 
 #
 
@@ -50,7 +53,12 @@ scaler = MinMaxScaler()
 scaled = scaler.fit_transform(Dataset)
 print(scaled)
 # features, recovertex, labels= np.split(Dataset,[4400,4403],axis=1)
-features, rest1, nhits0, rest2, recovertex, labels, gridpoint, gridpointreco, gridpointpmt = np.split(Dataset,[4400,5500,5501,5502,5505,5508,5509, 5510],axis=1)
+# features, rest1, nhits0, rest2, recovertex, labels, gridpoint, gridpointreco, gridpointpmt = np.split(Dataset,[4400,5500,5501,5502,5505,5508,5509, 5510],axis=1)
+
+# features, nhits0, rest2, recovertex, labels, gridpoint, gridpointreco = np.split(Dataset,[1200,1201,1202,1205,1208,1209],axis=1)
+#with 20 hits
+features, nhits0, rest2, recovertex, labels, gridpoint, gridpointreco = np.split(Dataset,[80,81,82,85,88,89],axis=1)
+
 
 print("features: ",features)
 print("recovertex: ",recovertex)
@@ -71,10 +79,10 @@ print("test sample features shape: ", test_x.shape," test sample label shape: ",
 
 # create model
 model = Sequential()
-model.add(Dense(50, input_dim=4400, kernel_initializer='normal', activation='relu'))
+model.add(Dense(60, input_dim=80, kernel_initializer='normal', activation='relu'))
 # model.add(Dense(50, kernel_initializer='normal', activation='relu'))
-model.add(Dense(35, kernel_initializer='normal', activation='relu'))
-model.add(Dense(20, kernel_initializer='normal', activation='relu'))
+model.add(Dense(45, kernel_initializer='normal', activation='relu'))
+model.add(Dense(30, kernel_initializer='normal', activation='relu'))
 model.add(Dense(10, kernel_initializer='normal', activation='relu'))
 model.add(Dense(3, kernel_initializer='normal', activation='relu'))
 
@@ -83,7 +91,7 @@ model.add(Dense(3, kernel_initializer='normal', activation='relu'))
 #model.add(Dense(3, kernel_initializer='normal', activation='relu'))
 
 # load weights
-model.load_weights("weights_bets.hdf5")
+model.load_weights("weights_bets20.hdf5")
 
 # Compile model
 model.compile(loss='mean_squared_error', optimizer='Adamax', metrics=['accuracy'])
@@ -126,7 +134,7 @@ print(" saving .csv file with predicted variables..")
 with open("predicted_features.csv", "w", newline="") as csvfile:
    
     # Define the headers for the CSV file
-    fieldnames = ["hitX_" + str(i) for i in range(1, 1101)] + ["hitY_" + str(i) for i in range(1, 1101)] + ["hitZ_" + str(i) for i in range(1, 1101)] + ["hitT_" + str(i) for i in range(1, 1101)]
+    fieldnames = ["hitX_" + str(i) for i in range(1, 21)] + ["hitY_" + str(i) for i in range(1, 21)] + ["hitZ_" + str(i) for i in range(1, 21)] + ["hitT_" + str(i) for i in range(1, 21)]
 
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     
@@ -136,10 +144,10 @@ with open("predicted_features.csv", "w", newline="") as csvfile:
     # Loop over the rows in the test_x array
     for row in test_x:
         # Extract the hitX, hitY, hitZ, and hitT values for this row
-        hitX = row[:1100]
-        hitY = row[1100:2200]
-        hitZ = row[2200:3300]
-        hitT = row[3300:]
+        hitX = row[:20]
+        hitY = row[20:40]
+        hitZ = row[40:60]
+        hitT = row[60:]
         
         # Write these values to the CSV file
         writer.writerow(dict(zip(fieldnames, np.concatenate((hitX, hitY, hitZ, hitT)))))  
@@ -168,4 +176,5 @@ dfb = pd.read_csv("predictionsVertex.csv")
 final_df = pd.concat([dfa, dfb], axis=1)
 print(final_df.head())
 # Write the combined dataframe to a new CSV file
-final_df.to_csv("predictionsVertex_3vars.csv", index=False)
+# final_df.to_csv("predictionsVertex_3vars.csv", index=False)
+final_df.to_csv("predictionsVertex_20hits.csv", index=False)
