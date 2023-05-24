@@ -106,16 +106,25 @@ print(hits_medianT(Dt, Dx, Dy, Dz))
 # Create the modified DataFrame
 modified_df = hits_medianT(Dt, Dx, Dy, Dz)
 
+output_df = pd.DataFrame({'totalPMTs': totalPMTs[:,0],
+                          'totalLAPPDs': totalLAPPDs[:,0],
+                          'reco_x': recovertex[:, 0],
+                          'reco_y': recovertex[:, 1],
+                          'reco_z': recovertex[:, 2],
+                          'truevtxX': labels[:, 0],
+                          'truevtxY': labels[:, 1],
+                          'truevtxZ': labels[:, 2],
+                          'Gridpoint': gridpoint[:,0],
+                          'GridpointRECO': gridpointreco[:,0]
+                          
+})
+
+# print(output_df)
+
+final_df = pd.concat([modified_df, output_df], axis=1)
+print(final_df)
+
 # Save the modified DataFrame to a new CSV file
-output_file = 'shuffledevents_Timebeforemedian.csv'
-modified_df.to_csv(output_file, index=False)
-print(f'Saved the modified data to {output_file}.')
-
-
-# #call the function for all events:
-
-# #np.random.shuffle(Dataset) #shuffling the data sample to avoid any bias in the training
-# # df = pd.DataFrame(Dataset, columns=column_names)
-# #print(df.head())
-# # df.to_csv("shuffledevents_Timebeforemedian.csv", float_format = '%.3f', header=False)
-
+final_file = 'shuffledevents_Timebeforemedian.csv'
+final_df.to_csv(final_file, float_format = '%.3f', index=False)
+print(f'Saved the modified data to {final_file}.')
