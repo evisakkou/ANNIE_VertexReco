@@ -587,7 +587,7 @@ void tankLocalFindTrackLengthInWaterVtxReco()
     //f.Close();
    input->Close();
 //cout <<"Num of events with nhits>0="<<count3<<endl;
-cout <<"Num of events with TrueTrackLengtninMRD>0="<<count2<<endl;
+cout <<"Num of events with TrueTrackLengtninMRD>10="<<count2<<endl;
 //cout <<"Num of events with recovtxfom<=0:"<<count1<<endl;
 }
 
