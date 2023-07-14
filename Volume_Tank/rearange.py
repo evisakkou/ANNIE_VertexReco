@@ -26,7 +26,6 @@ new_df = df[column_order]
 
 new_df.to_csv('/home/evi/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_VertexReco/Volume_Tank/VolumeTank_Texpected1.csv', index=False)
 
-
 #ADD COLUMNS FOR NHITS, GRIDPOINT, AND TRUE GRID COORDS
 
 existing_df = pd.read_csv('/home/evi/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_VertexReco/Volume_Tank/VolumeTank_Texpected1.csv')
