@@ -53,9 +53,32 @@ for index, row in df.iterrows():
 final_df = pd.DataFrame()
 for i in range(1, 21):
     final_df[f'X_{i}'] = selected_x[(i-1)::20]
+
+for i in range(1, 21):
     final_df[f'Y_{i}'] = selected_y[(i-1)::20]
+
+for i in range(1, 21):
     final_df[f'Z_{i}'] = selected_z[(i-1)::20]
+
+for i in range(1, 21):
     final_df[f'T_{i}'] = selected_t[(i-1)::20]
+
+
+# for i in range(1, num_sets + 1):
+#     column_order.extend(['X_' + str(i)])
 
 # Save the final DataFrame to a new CSV file
 final_df.to_csv('/home/evi/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_VertexReco/Volume_Tank/VolumeTank_Texpected1.csv', index=False)
+
+#ADD COLUMNS FOR NHITS, GRIDPOINT, AND TRUE GRID COORDS
+
+# Extract the desired columns from the extra DataFrame
+add_columns = ['totalPMTs', 'truevtxX', 'truevtxY', 'truevtxZ', 'Gridpoint', 'xc', 'yc', 'zc']
+extra_columns = df[add_columns]
+
+# Concatenate the existing DataFrame with the extra columns
+combined_df = pd.concat([final_df, extra_columns], axis=1)
+
+# Save the combined DataFrame to a new CSV file
+combined_df.to_csv('/home/evi/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_VertexReco/Volume_Tank/VolumeTank_Texpected1.csv', index=False)
+
