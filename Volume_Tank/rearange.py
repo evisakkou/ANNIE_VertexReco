@@ -40,7 +40,7 @@ existing_df = pd.read_csv('/home/evi/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_Ver
 extra_df = pd.read_csv('tankPMT_withonlyMRDcut_insidevolume2.csv')
 
 # Extract the desired columns from the extra DataFrame
-add_columns = ['totalPMTs', 'truevtxX', 'truevtxY', 'truevtxZ', 'Gridpoint', 'xc', 'yc', 'zc']  # Replace with the actual column names you want to extract
+add_columns = ['totalPMTs', 'truevtxX', 'truevtxY', 'truevtxZ', 'Gridpoint', 'xc', 'yc', 'zc']
 extra_columns = extra_df[add_columns]
 
 # Concatenate the existing DataFrame with the extra columns
