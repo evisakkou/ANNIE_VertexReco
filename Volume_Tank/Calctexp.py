@@ -8,7 +8,7 @@ import csv
 from array import array
 import math
 
-infile ='/home/evi/Desktop/ANNIE-THESIS-2/VolumeTank_Texpected.csv'
+infile ='/home/evi/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_VertexReco/Volume_Tank/VolumeTank_Texpected1.csv'
 df = pd.read_csv(infile)
 print(df.head())
 #print(df.tail())
@@ -55,7 +55,7 @@ df['MinGrid_Z'] = np.nan
 df['Dist'] = np.nan
 
 
-for n in range(len(5)):
+for n in range(len(hitx)):
     if (n + 1) % 100 == 0:
         print(f"Processed {n+1} events.")
     for i in range(20):
@@ -69,8 +69,8 @@ for n in range(len(5)):
         index_DT, mindt = min_Texp(texp_foreachhit, hitT.iloc[n, i])
         df.loc[n, f'texp_{i+1}'] = texp_foreachhit[index_DT]
 
-        new_texp_foreachhit = find_nextMin(index_DT, texp_foreachhit) #array without the 1st Dt minimum
-        index_DT2, mindt2 = min_Texp(new_texp_foreachhit, hitT.iloc[n, i]) #find 2nd Dt minimum 
+        # new_texp_foreachhit = find_nextMin(index_DT, texp_foreachhit) #array without the 1st Dt minimum
+        # index_DT2, mindt2 = min_Texp(new_texp_foreachhit, hitT.iloc[n, i]) #find 2nd Dt minimum 
         
 
         # Store minimum dt and corresponding grid points
@@ -86,6 +86,6 @@ for n in range(len(5)):
 
     # print('dist', dist)
 
-df.to_csv('tankPMT_withonlyMRDcut_insidevolume_withTexp.csv', index=False, float_format = '%.3f')
+df.to_csv('tankPMT_withonlyMRDcut_insidevolume_withTexp1707.csv', index=False, float_format = '%.3f')
 print(df.head())
 print(f'Saved the modified data to {df}.')

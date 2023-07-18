@@ -17,13 +17,14 @@ from sklearn import preprocessing
 from sklearn.utils import shuffle
 from tensorflow import keras
 from tensorflow.python.keras.models import Sequential
+from tensorflow.python.keras import layers
 from tensorflow.python.keras.layers import Dense
 from tensorflow.python.keras.callbacks import ModelCheckpoint
 from tensorflow.python.keras.wrappers.scikit_learn import KerasRegressor
 from sklearn.model_selection import cross_val_score
 
 # infile='tankPMT_withonlyMRDcut_insidevolume_withTexp.csv'
-infile='/home/evi/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_VertexReco/Volume_Tank/modified_csv_file.csv'
+infile='/home/evi/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_VertexReco/Volume_Tank/tankPMT_withonlyMRDcut_insidevolume_withTexp1707.csv'
 # Set TF random seed to improve reproducibility
 seed = 170
 np.random.seed(seed)
@@ -45,24 +46,26 @@ print(scaled)
 
 
 # features,hitT, nhits, labels, gridpoint, cm, texp = np.split(Dataset,[60, 80, 81,84,85,88],axis=1)
-features, nhits, labels, gridpoint, cm, mingrid, Dist, texp = np.split(Dataset, [80,81,84,85,88,91,92], axis=1)
-
+# features, nhits, labels, gridpoint, cm, mingrid, Dist, texp = np.split(Dataset, [80,81,84,85,88,91,92], axis=1)
+hits, hitT, nhits, labels, gridpoint, cm, mingrid, Dist, texp = np.split(Dataset, [60, 80,81,84,85,88,91,92], axis=1)
 
 
 print('nhits', nhits)
-print("features: ",features)
+# print("features: ",features)
+print('hitT',hitT)
 print("labels: ", labels)
 print("gridpoint ", gridpoint)
 print('texp', texp)
 print('cm', cm)
 print('mingrid', mingrid)
+print('dist', Dist)
 # print('dist', dist)
 
 #split events in train/test samples:
-num_events, num_pixels = features.shape
+# num_events, num_pixels = hitT.shape
 # print(num_events, num_pixels)
 np.random.seed(0)
-train_x = np.hstack((cm[:3000], texp[:3000], ))
+train_x = np.hstack((hitT[:3000], cm[:3000], texp[:3000], ))
 train_y = cm[:3000]
 # train_y =texp[:3000]
 # train_y = np.hstack((cm[:3000], texp[:3000]))
@@ -72,8 +75,8 @@ print(num_events, num_pixels)
 print("train sample features shape: ", train_x.shape," train sample label shape: ", train_y.shape)
 
 # Scale data (training set) to 0 mean and unit standard deviation.
-# scaler = preprocessing.StandardScaler()
-# train_x = scaler.fit_transform(train_x)
+scaler = preprocessing.StandardScaler()
+train_x = scaler.fit_transform(train_x)
 
 def custom_loss_function(y_true, y_pred):
     # Calculate the mean squared error (MSE)
@@ -90,13 +93,15 @@ def custom_loss_function(y_true, y_pred):
 def create_model():
     # create model
     model = Sequential()
-    model.add(Dense(50, input_dim=100, kernel_initializer='normal', activation='relu'))
+    model.add(Dense(50, input_dim=43, kernel_initializer='normal', activation='relu'))
 #    model.add(Dense(20, kernel_initializer='normal', activation='relu'))
     model.add(Dense(30, kernel_initializer='normal', activation='relu'))
     model.add(Dense(10, kernel_initializer='normal', activation='relu'))
-    model.add(Dense(3, kernel_initializer='normal', activation='relu'))
+    model.add(Dense(3, kernel_initializer='normal', activation='relu')) 
+    # optimizer = optimizers.Ftrl(learning_rate=0.001)
     # Compile model
-    model.compile(loss=custom_loss_function, optimizer='ftrl', metrics=custom_loss_function)
+    # model.compile(loss=custom_loss_function, optimizer='ftrl', metrics=custom_loss_function)
+    model.compile(loss='mse', optimizer='ftrl', metrics=['mse'])
     return model
 
 # estimator = KerasRegressor(build_fn=create_model, epochs=30, batch_size=4, verbose=0)
@@ -133,4 +138,4 @@ ax2.set_ylabel('Performance')
 ax2.set_xlabel('Epochs')
 ax2.set_xlim(0.,30.)
 ax2.legend(['training loss', 'validation loss'], loc='upper left')
-plt.savefig("/home/evi/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_VertexReco/Volume_Tank/keras_train_test_volume1.pdf")
+plt.savefig("/home/evi/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_VertexReco/Volume_Tank/keras_train_test_volume1707.pdf")
