@@ -8,24 +8,20 @@ import csv
 from array import array
 import math
 
-infile ='/home/evi/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_VertexReco/Volume_Tank/VolumeTank_Texpected1.csv'
+infile = '/home/evi/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_VertexReco/Volume_Tank/VolumeTank_Texpected1.csv'
 df = pd.read_csv(infile)
 print(df.head())
-#print(df.tail())
-
-# Read file with gridpoints vertices to calculate the expected hit time #
-# Each row corresponds to the gridpoint number:
 infile2 = '~/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_VertexReco/Volume_Tank/gridpoint_coords.csv'
-df2 = pd.read_csv(infile2, header = None)
+df2 = pd.read_csv(infile2, header=None)
 print(df2.head())
 coord = np.array(df2)
-print('coord[0][:] ',coord[0][:])
+print('coord[0][:] ', coord[0][:])
 print('coordlen', coord.shape)
 
-hitx_cols = [f'X_{i}' for i in range(1,21)]
-hity_cols = [f'Y_{i}' for i in range(1,21)]
-hitz_cols = [f'Z_{i}' for i in range(1,21)]
-hitT_cols = [f'T_{i}' for i in range(1,21)]
+hitx_cols = [f'X_{i}' for i in range(1, 21)]
+hity_cols = [f'Y_{i}' for i in range(1, 21)]
+hitz_cols = [f'Z_{i}' for i in range(1, 21)]
+hitT_cols = [f'T_{i}' for i in range(1, 21)]
 
 hitx = df[hitx_cols]
 hity = df[hity_cols]
@@ -47,17 +43,19 @@ def find_nextMin(index, texp_arr):
     new_texp_foreachhit = np.delete(texp_arr, index)
     return new_texp_foreachhit
 
-texp_foreachhit = []
-MinGridpoint=[]
-df['MinGrid_X'] = np.nan
-df['MinGrid_Y'] = np.nan
-df['MinGrid_Z'] = np.nan
-df['Dist'] = np.nan
+# df['MinGrid_X'] = np.nan
+# df['MinGrid_Y'] = np.nan
+# df['MinGrid_Z'] = np.nan
+# df['Dist'] = np.nan
 
-
-for n in range(len(hitx)):
+for n in range(5):
     if (n + 1) % 100 == 0:
         print(f"Processed {n+1} events.")
+    event_texp = []
+    event_mingrid_X = []
+    event_mingrid_Y = []
+    event_mingrid_Z = []
+    
     for i in range(20):
         texp_foreachhit = []
         for j in range(1000):
@@ -65,27 +63,30 @@ for n in range(len(hitx)):
             texp = s / c
             texp_foreachhit.append(texp)
         
-        #find the index and value of the expected time for each hit(out of 20 hits before median)
+        # Find the index and value of the expected time for each hit (out of 20 hits before median)
         index_DT, mindt = min_Texp(texp_foreachhit, hitT.iloc[n, i])
-        df.loc[n, f'texp_{i+1}'] = texp_foreachhit[index_DT]
-
-        # new_texp_foreachhit = find_nextMin(index_DT, texp_foreachhit) #array without the 1st Dt minimum
-        # index_DT2, mindt2 = min_Texp(new_texp_foreachhit, hitT.iloc[n, i]) #find 2nd Dt minimum 
+        min_texp = texp_foreachhit[index_DT]
+        mingrid_X = coord[index_DT][0]
+        mingrid_Y = coord[index_DT][1]
+        mingrid_Z = coord[index_DT][2]
         
+        # Store the minimum texp and corresponding grid point coordinates for each hit
+        event_texp.append(min_texp)
+        event_mingrid_X.append(mingrid_X)
+        event_mingrid_Y.append(mingrid_Y)
+        event_mingrid_Z.append(mingrid_Z)
 
-        # Store minimum dt and corresponding grid points
-        
-        df.loc[n, f'MinGrid_X'] = coord[index_DT][0]
-        df.loc[n, f'MinGrid_Y'] = coord[index_DT][1]
-        df.loc[n, f'MinGrid_Z'] = coord[index_DT][2]
-        # df.loc[n, f'Min_dt'] = mindt
+        # Calculate distance between (xc, yc, zc) and (MinGrid_X, MinGrid_Y, MinGrid_Z)
+        # dist = np.sqrt((df.loc[n, 'xc'] - mingrid_X)**2 + (df.loc[n, 'yc'] - mingrid_Y)**2 + (df.loc[n, 'zc'] - mingrid_Z)**2)
+        # df.loc[n, 'Dist'] = dist
 
-    # Calculate distance between (xc, yc, zc) and (MinGrid_X, MinGrid_Y, MinGrid_Z)
-    dist = np.sqrt((df.loc[n, 'xc'] - df.loc[n, 'MinGrid_X'])**2 + (df.loc[n, 'yc'] - df.loc[n, 'MinGrid_Y'])**2 + (df.loc[n, 'zc'] - df.loc[n, 'MinGrid_Z'])**2)
-    df.loc[n, 'Dist'] = dist
+    # Append the lists for the current event to the DataFrame
+    for i in range(20):
+        df.loc[n, f'texp_{i+1}'] = event_texp[i]
+        df.loc[n, f'MinGrid_X_{i+1}'] = event_mingrid_X[i]
+        df.loc[n, f'MinGrid_Y_{i+1}'] = event_mingrid_Y[i]
+        df.loc[n, f'MinGrid_Z_{i+1}'] = event_mingrid_Z[i]
 
-    # print('dist', dist)
-
-df.to_csv('tankPMT_withonlyMRDcut_insidevolume_withTexp1707.csv', index=False, float_format = '%.3f')
+df.to_csv('tankPMT_withonlyMRDcut_insidevolume_withTexp1907.csv', index=False, float_format='%.3f')
 print(df.head())
-print(f'Saved the modified data to {df}.')
+print("Saved the modified data to tankPMT_withonlyMRDcut_insidevolume_withTexp1907.csv.")
