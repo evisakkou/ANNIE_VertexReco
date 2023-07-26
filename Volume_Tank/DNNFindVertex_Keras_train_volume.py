@@ -24,7 +24,8 @@ from tensorflow.python.keras.wrappers.scikit_learn import KerasRegressor
 from sklearn.model_selection import cross_val_score
 
 # infile='tankPMT_withonlyMRDcut_insidevolume_withTexp.csv'
-infile='/home/evi/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_VertexReco/Volume_Tank/tankPMT_withonlyMRDcut_insidevolume_withTexp1707.csv'
+infile='/home/evi/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_VertexReco/Volume_Tank/shuffled_tankPMT_withonlyMRDcut_insidevolume_withTexp2407.csv'
+# infile= '/home/evi/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_VertexReco/Volume_Tank/Final_Tank_IncideVolume.csv'
 # Set TF random seed to improve reproducibility
 seed = 170
 np.random.seed(seed)
@@ -47,7 +48,8 @@ print(scaled)
 
 # features,hitT, nhits, labels, gridpoint, cm, texp = np.split(Dataset,[60, 80, 81,84,85,88],axis=1)
 # features, nhits, labels, gridpoint, cm, mingrid, Dist, texp = np.split(Dataset, [80,81,84,85,88,91,92], axis=1)
-hits, hitT, nhits, labels, gridpoint, cm, mingrid, Dist, texp = np.split(Dataset, [60, 80,81,84,85,88,91,92], axis=1)
+# hits, hitT, nhits, labels, gridpoint, cm, texp, mingridx, mingridy, mingridz = np.split(Dataset, [60, 80,81,84,85,88,108, 128,148 ], axis=1)
+hits, hitT, nhits, labels, gridpoint, cm, texp, mingridx, mingridy, mingridz, recovtx, recofom = np.split(Dataset, [60, 80,81,84,85,88,108, 128,148,168,171 ], axis=1)
 
 
 print('nhits', nhits)
@@ -57,15 +59,15 @@ print("labels: ", labels)
 print("gridpoint ", gridpoint)
 print('texp', texp)
 print('cm', cm)
-print('mingrid', mingrid)
-print('dist', Dist)
+print('mingrid', mingridx)
+# print('dist', Dist)
 # print('dist', dist)
 
 #split events in train/test samples:
 # num_events, num_pixels = hitT.shape
 # print(num_events, num_pixels)
 np.random.seed(0)
-train_x = np.hstack((hitT[:3000], cm[:3000], texp[:3000], ))
+train_x = np.hstack((hitT[:3000], mingridx[:3000], mingridy[:3000], mingridz[:3000], texp[:3000] ))
 train_y = cm[:3000]
 # train_y =texp[:3000]
 # train_y = np.hstack((cm[:3000], texp[:3000]))
@@ -93,15 +95,15 @@ def custom_loss_function(y_true, y_pred):
 def create_model():
     # create model
     model = Sequential()
-    model.add(Dense(50, input_dim=43, kernel_initializer='normal', activation='relu'))
+    model.add(Dense(50, input_dim=100, kernel_initializer='normal', activation='relu'))
 #    model.add(Dense(20, kernel_initializer='normal', activation='relu'))
     model.add(Dense(30, kernel_initializer='normal', activation='relu'))
     model.add(Dense(10, kernel_initializer='normal', activation='relu'))
     model.add(Dense(3, kernel_initializer='normal', activation='relu')) 
     # optimizer = optimizers.Ftrl(learning_rate=0.001)
     # Compile model
-    # model.compile(loss=custom_loss_function, optimizer='ftrl', metrics=custom_loss_function)
-    model.compile(loss='mse', optimizer='ftrl', metrics=['mse'])
+    model.compile(loss=custom_loss_function, optimizer='ftrl', metrics=custom_loss_function)
+    # model.compile(loss='mse', optimizer='ftrl', metrics=['mse'])
     return model
 
 # estimator = KerasRegressor(build_fn=create_model, epochs=30, batch_size=4, verbose=0)
@@ -138,4 +140,4 @@ ax2.set_ylabel('Performance')
 ax2.set_xlabel('Epochs')
 ax2.set_xlim(0.,30.)
 ax2.legend(['training loss', 'validation loss'], loc='upper left')
-plt.savefig("/home/evi/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_VertexReco/Volume_Tank/keras_train_test_volume1707.pdf")
+plt.savefig("/home/evi/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_VertexReco/Volume_Tank/keras_train_test_volume2407.pdf")

@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from array import array
 
 
-df = pd.read_csv('tankPMT_withonlyMRDcut_insidevolume.csv')
+df = pd.read_csv('/home/evi/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_VertexReco/Volume_Tank/tankPMT_withonlyMRDcut_insidevolume_2407.csv')
 
 print(df.shape)
 print(df.head())
@@ -67,5 +67,5 @@ print(df.shape)
 
 print(df.head())
 
-df.to_csv('tankPMT_withonlyMRDcut_insidevolume2.csv', index=False)
+df.to_csv('/home/evi/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_VertexReco/Volume_Tank/tankPMT_withonlyMRDcut_insidevolume_2407.csv', index=False)
 

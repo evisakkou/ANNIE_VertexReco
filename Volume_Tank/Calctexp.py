@@ -8,9 +8,11 @@ import csv
 from array import array
 import math
 
-infile = '/home/evi/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_VertexReco/Volume_Tank/VolumeTank_Texpected1.csv'
+# infile = '/home/evi/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_VertexReco/Volume_Tank/VolumeTank_Texpected1.csv'
+infile= '/home/evi/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_VertexReco/Volume_Tank/VolumeTank_Texpected2407.csv'
 df = pd.read_csv(infile)
 print(df.head())
+
 infile2 = '~/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_VertexReco/Volume_Tank/gridpoint_coords.csv'
 df2 = pd.read_csv(infile2, header=None)
 print(df2.head())
@@ -48,7 +50,7 @@ def find_nextMin(index, texp_arr):
 # df['MinGrid_Z'] = np.nan
 # df['Dist'] = np.nan
 
-for n in range(5):
+for n in range(len(hitx)):
     if (n + 1) % 100 == 0:
         print(f"Processed {n+1} events.")
     event_texp = []
@@ -83,10 +85,13 @@ for n in range(5):
     # Append the lists for the current event to the DataFrame
     for i in range(20):
         df.loc[n, f'texp_{i+1}'] = event_texp[i]
+    for i in range(20):
         df.loc[n, f'MinGrid_X_{i+1}'] = event_mingrid_X[i]
+    for i in range(20):
         df.loc[n, f'MinGrid_Y_{i+1}'] = event_mingrid_Y[i]
+    for i in range(20):
         df.loc[n, f'MinGrid_Z_{i+1}'] = event_mingrid_Z[i]
 
-df.to_csv('tankPMT_withonlyMRDcut_insidevolume_withTexp1907.csv', index=False, float_format='%.3f')
+df.to_csv('tankPMT_withonlyMRDcut_insidevolume_withTexp2407.csv', index=False, float_format='%.3f')
 print(df.head())
 print("Saved the modified data to tankPMT_withonlyMRDcut_insidevolume_withTexp1907.csv.")

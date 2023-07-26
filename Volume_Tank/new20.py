@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 # Read the original CSV file
-infile = 'tankPMT_withonlyMRDcut_insidevolume2.csv'
+infile = '/home/evi/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_VertexReco/Volume_Tank/tankPMT_withonlyMRDcut_insidevolume_2407.csv'
 
 # Read the CSV file into a pandas DataFrame
 df = pd.read_csv(infile)
@@ -68,7 +68,7 @@ for i in range(1, 21):
 #     column_order.extend(['X_' + str(i)])
 
 # Save the final DataFrame to a new CSV file
-final_df.to_csv('/home/evi/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_VertexReco/Volume_Tank/VolumeTank_Texpected1.csv', index=False)
+final_df.to_csv('/home/evi/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_VertexReco/Volume_Tank/VolumeTank_Texpected2407.csv', index=False)
 
 #ADD COLUMNS FOR NHITS, GRIDPOINT, AND TRUE GRID COORDS
 
@@ -80,5 +80,5 @@ extra_columns = df[add_columns]
 combined_df = pd.concat([final_df, extra_columns], axis=1)
 
 # Save the combined DataFrame to a new CSV file
-combined_df.to_csv('/home/evi/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_VertexReco/Volume_Tank/VolumeTank_Texpected1.csv', index=False)
+combined_df.to_csv('/home/evi/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_VertexReco/Volume_Tank/VolumeTank_Texpected2407.csv', index=False)
 
