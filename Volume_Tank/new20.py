@@ -73,7 +73,7 @@ final_df.to_csv('/home/evi/Desktop/ANNIE-THESIS-2/VolumeTank/ANNIE_VertexReco/Vo
 #ADD COLUMNS FOR NHITS, GRIDPOINT, AND TRUE GRID COORDS
 
 # Extract the desired columns from the extra DataFrame
-add_columns = ['totalPMTs', 'truevtxX', 'truevtxY', 'truevtxZ', 'Gridpoint', 'xc', 'yc', 'zc']
+add_columns = ['totalPMTs', 'truevtxX', 'truevtxY', 'truevtxZ', 'Gridpoint', 'xc', 'yc', 'zc', 'recovtxX','recovtxY','recovtxZ','recoVtxFOM']
 extra_columns = df[add_columns]
 
 # Concatenate the existing DataFrame with the extra columns
